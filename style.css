@@ -1,137 +1,131 @@
-/* Gradient dusty blue and cream background */
 body {
     margin: 0;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #b1b8c7 0%, #f6efe7 100%);
-    color: #30415d;
-    display: flex;
-    flex-direction: column;
+    font-family: 'Segoe UI', sans-serif;
+    background: #181818;
+    color: #fff;
 }
 
-header {
-    padding: 2rem;
-    background: rgba(255,255,255,0.8);
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(48, 65, 93, 0.07);
-}
-
-header h1 {
-    margin: 0 0 1rem 0;
-    font-size: 2.5rem;
-    letter-spacing: 2px;
-    color: #3b4d63;
-}
-
-#searchBar {
-    padding: 0.7rem 1.2rem;
-    width: 60%;
-    border: 1px solid #b1b8c7;
-    border-radius: 20px;
-    font-size: 1rem;
-    background: #f6efe7;
-    transition: box-shadow 0.2s;
-}
-
-#searchBar:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #b1b8c7;
-}
-
-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-}
-
-#music-list {
-    width: 100%;
-    max-width: 600px;
-    background: rgba(255,255,255,0.7);
-    border-radius: 16px;
-    box-shadow: 0 1px 12px rgba(48, 65, 93, 0.05);
-    margin-bottom: 2rem;
-    padding: 1rem;
-}
-
-.song {
+.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem 0.5rem;
-    border-bottom: 1px solid #ece6df;
+    background: #121212;
+    padding: 1rem 2rem;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1DB954;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.2s;
+}
+
+.nav-links li a:hover {
+    color: #1DB954;
+}
+
+main {
+    padding: 2rem;
+}
+
+.album {
+    background: #222;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 700px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.album-info {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.album-cover {
+    width: 180px;
+    height: 180px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(30,185,84,0.2);
+}
+
+.song-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.song-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #333;
+    margin: 0.5rem 0;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+}
+
+.song-list li span {
+    font-size: 1rem;
+}
+
+.play-btn {
+    background: #1DB954;
+    border: none;
+    color: #fff;
+    border-radius: 20px;
+    padding: 0.5rem 1.2rem;
     cursor: pointer;
+    font-size: 1rem;
     transition: background 0.2s;
 }
 
-.song:last-child {
-    border-bottom: none;
+.play-btn:hover {
+    background: #169c42;
 }
 
-.song:hover {
-    background: #e7e7ec;
-}
-
-.song-info {
+.music-player {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #282828;
     display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.song-title {
-    font-weight: bold;
-    color: #30415d;
-}
-
-.song-artist {
-    font-size: 0.9rem;
-    color: #6e7a8a;
-}
-
-#player {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    background: #f6efe7;
-    border-radius: 14px;
-    box-shadow: 0 1px 8px rgba(48, 65, 93, 0.04);
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 1.2rem 0;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.5);
+    z-index: 100;
+    gap: 1rem;
 }
 
-#now-playing {
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-    color: #3b4d63;
+.song-details {
+    flex: 1 1 30%;
 }
 
-#playBtn, #pauseBtn {
-    padding: 0.5rem 1.3rem;
-    margin: 0 0.5rem;
-    border: none;
-    border-radius: 20px;
-    background: linear-gradient(90deg, #b1b8c7 0%, #f6efe7 100%);
-    color: #30415d;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-#playBtn:disabled, #pauseBtn:disabled {
-    background: #ece6df;
-    color: #b1b8c7;
-    cursor: not-allowed;
-}
-
-footer {
-    text-align: center;
-    padding: 1rem 0;
-    background: rgba(255,255,255,0.7);
-    font-size: 0.95rem;
-    color: #6e7a8a;
-    letter-spacing: 1px;
+#seekbar {
+    width: 200px;
+    accent-color: #1DB954;
 }
