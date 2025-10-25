@@ -1,0 +1,137 @@
+/* Gradient dusty blue and cream background */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #b1b8c7 0%, #f6efe7 100%);
+    color: #30415d;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    padding: 2rem;
+    background: rgba(255,255,255,0.8);
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(48, 65, 93, 0.07);
+}
+
+header h1 {
+    margin: 0 0 1rem 0;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    color: #3b4d63;
+}
+
+#searchBar {
+    padding: 0.7rem 1.2rem;
+    width: 60%;
+    border: 1px solid #b1b8c7;
+    border-radius: 20px;
+    font-size: 1rem;
+    background: #f6efe7;
+    transition: box-shadow 0.2s;
+}
+
+#searchBar:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #b1b8c7;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+#music-list {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 16px;
+    box-shadow: 0 1px 12px rgba(48, 65, 93, 0.05);
+    margin-bottom: 2rem;
+    padding: 1rem;
+}
+
+.song {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0.5rem;
+    border-bottom: 1px solid #ece6df;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.song:last-child {
+    border-bottom: none;
+}
+
+.song:hover {
+    background: #e7e7ec;
+}
+
+.song-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.song-title {
+    font-weight: bold;
+    color: #30415d;
+}
+
+.song-artist {
+    font-size: 0.9rem;
+    color: #6e7a8a;
+}
+
+#player {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #f6efe7;
+    border-radius: 14px;
+    box-shadow: 0 1px 8px rgba(48, 65, 93, 0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.2rem 0;
+}
+
+#now-playing {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #3b4d63;
+}
+
+#playBtn, #pauseBtn {
+    padding: 0.5rem 1.3rem;
+    margin: 0 0.5rem;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #b1b8c7 0%, #f6efe7 100%);
+    color: #30415d;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+#playBtn:disabled, #pauseBtn:disabled {
+    background: #ece6df;
+    color: #b1b8c7;
+    cursor: not-allowed;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    background: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    color: #6e7a8a;
+    letter-spacing: 1px;
+}
