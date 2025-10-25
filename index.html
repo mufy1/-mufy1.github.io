@@ -2,28 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Mini Spotify Clone</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Musical Fury</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Musical Fury</h1>
-        <input type="text" id="searchBar" placeholder="Search for songs, artists..." />
-    </header>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">MySpotify</div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Albums</a></li>
+            <li><a href="#">Artists</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
     <main>
-        <section id="music-list">
-            <!-- Songs will be populated here -->
-        </section>
-        <section id="player">
-            <div id="now-playing">Nothing playing...</div>
-            <button id="playBtn" disabled>Play</button>
-            <button id="pauseBtn" disabled>Pause</button>
+        <section class="album">
+            <h2>Featured Album</h2>
+            <div class="album-info">
+                <img src="https://i.scdn.co/image/ab67616d0000b273e4b0f45f2a1f4c1b8c9b5d6a" alt="Album Cover" class="album-cover">
+                <div>
+                    <h3>Chill Beats</h3>
+                    <p>by Various Artists</p>
+                    <ul class="song-list">
+                        <li data-src="songs/song1.mp3">
+                            <span>1. Dreamscape</span>
+                            <button class="play-btn">Play</button>
+                        </li>
+                        <li data-src="songs/song2.mp3">
+                            <span>2. Evening Glow</span>
+                            <button class="play-btn">Play</button>
+                        </li>
+                        <li data-src="songs/song3.mp3">
+                            <span>3. Stardust</span>
+                            <button class="play-btn">Play</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2025 Musical Fury. All rights reserved.</p>
-    </footer>
+
+    <!-- Music Player Controller -->
+    <div class="music-player">
+        <div class="song-details">
+            <span id="current-song">Select a song...</span>
+        </div>
+        <div class="controls">
+            <button id="play-pause">Play</button>
+            <button id="loop">Loop: Off</button>
+        </div>
+        <input type="range" id="seekbar" value="0" min="0" max="100">
+        <audio id="audio" preload="none"></audio>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
