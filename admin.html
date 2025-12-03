@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Musical Fury</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #6B7B8C;
+            color: white;
+            padding: 20px;
+        }
+        form {
+            background-color: #4A5A6A;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        input, button {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        button {
+            background-color: #00FFFF;
+            color: #6B7B8C;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel - Add Song</h1>
+    <form id="addSongForm">
+        <input type="text" id="title" placeholder="Song Title" required>
+        <input type="text" id="artist" placeholder="Artist" required>
+        <button type="submit">Add Song</button>
+    </form>
+    <a href="index.html">Back to Main</a>
+
+    <script>
+        document.getElementById('addSongForm').onsubmit = (e) => {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const artist = document.getElementById('artist').value;
+            let songs = JSON.parse(localStorage.getItem('songs')) || [];
+            songs.push({ title, artist });
+            localStorage.setItem('songs', JSON.stringify(songs));
+            alert('Song added!');
+            document.getElementById('title').value = '';
+            document.getElementById('artist').value = '';
+        };
+    </script>
+</body>
+</html>
