@@ -1,56 +1,98 @@
-let token = null;
-let userRole = null;
+import React, { useState, useEffect } from 'react';
+import './App.css';
 
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const res = await fetch('/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
-  const data = await res.json();
-  if (res.ok) {
-    token = data.token;
-    userRole = data.role;
-    document.getElementById('login-modal').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    if (userRole === 'admin') document.getElementById('admin-panel').style.display = 'block';
+function App() {
+  const [songs, setSongs] = useState([]);
+  const [filteredSongs, setFilteredSongs] = useState([]);
+  const [currentSong, setCurrentSong] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audio, setAudio] = useState(null);
+
+  useEffect(() => {
+    // Load songs from localStorage or API
+    const loadSongs = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/songs'); // Backend API
+        const data = await response.json();
+        setSongs(data);
+        setFilteredSongs(data);
+      } catch {
+        // Fallback to localStorage
+        const localSongs = JSON.parse(localStorage.getItem('songs')) || [
+          { id: 1, title: 'Song 1', artist: 'Artist 1', url: 'path/to/song1.mp3' },
+          { id: 2, title: 'Song 2', artist: 'Artist 2', url: 'path/to/song2.mp3' }
+        ];
+        setSongs(localSongs);
+        setFilteredSongs(localSongs);
+      }
+    };
     loadSongs();
-  } else {
-    alert('Login failed');
-  }
-});
+  }, []);
 
-async function loadSongs() {
-  const res = await fetch('/songs');
-  const songs = await res.json();
-  const list = document.getElementById('song-list');
-  list.innerHTML = songs.map(song => `<div class="song-item" onclick="playSong('${song.file}', '${song.title}')">${song.title} by ${song.artist}</div>`).join('');
+  const playSong = (song) => {
+    if (audio) audio.pause();
+    const newAudio = new Audio(song.url); // Web Audio API integration
+    newAudio.play();
+    setAudio(newAudio);
+    setCurrentSong(song);
+    setIsPlaying(true);
+    newAudio.onended = () => setIsPlaying(false);
+  };
+
+  const togglePlayPause = () => {
+    if (audio) {
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const searchSongs = (query) => {
+    const filtered = songs.filter(song =>
+      song.title.toLowerCase().includes(query.toLowerCase()) ||
+      song.artist.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredSongs(filtered);
+  };
+
+  return (
+    <div className="app">
+      <header className="header">
+        <h1>Musical Fury</h1>
+      </header>
+      <div className="sidebar">
+        <h2>Playlists</h2>
+        <ul>
+          <li>Favorites</li>
+          <li>Recently Played</li>
+        </ul>
+      </div>
+      <div className="main-content">
+        <input
+          type="text"
+          placeholder="Search songs..."
+          onChange={(e) => searchSongs(e.target.value)}
+          className="search"
+        />
+        <ul className="song-list">
+          {filteredSongs.map(song => (
+            <li key={song.id} className="song-item" onClick={() => playSong(song)}>
+              {song.title} - {song.artist}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="controls">
+        <button onClick={() => {/* Prev logic */}}>Prev</button>
+        <button onClick={togglePlayPause}>{isPlaying ? 'Pause' : 'Play'}</button>
+        <button onClick={() => {/* Next logic */}}>Next</button>
+        <div>{currentSong ? `${currentSong.title} - ${currentSong.artist}` : 'No song playing'}</div>
+      </div>
+    </div>
+  );
 }
 
-function playSong(file, title) {
-  document.getElementById('audio-player').src = `/uploads/${file}`;
-  document.getElementById('current-song').textContent = title;
-}
-
-document.getElementById('admin-panel').addEventListener('click', () => {
-  document.getElementById('add-song-form').style.display = 'block';
-});
-
-document.getElementById('song-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const res = await fetch('/songs', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${token}` },
-    body: formData
-  });
-  if (res.ok) {
-    loadSongs();
-    document.getElementById('add-song-form').style.display = 'none';
-  } else {
-    alert('Failed to add song');
-  }
-});
+export default App;
