@@ -1,63 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Mini Spotify Clone</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Musical Fury</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="logo">MySpotify</div>
-        <ul class="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Albums</a></li>
-            <li><a href="#">Artists</a></li>
-        </ul>
+  <div id="login-modal" class="modal">
+    <form id="login-form">
+      <h2>Login to Musical Fury</h2>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <div id="app" style="display: none;">
+    <nav class="sidebar">
+      <div class="logo">Musical Fury</div>
+      <ul>
+        <li>Home</li>
+        <li>Search</li>
+        <li>Your Library</li>
+        <li id="admin-panel" style="display: none;">Admin: Add Song</li>
+      </ul>
     </nav>
-
-    <!-- Main Content -->
-    <main>
-        <section class="album">
-            <h2>Featured Album</h2>
-            <div class="album-info">
-                <img src="https://i.scdn.co/image/ab67616d0000b273e4b0f45f2a1f4c1b8c9b5d6a" alt="Album Cover" class="album-cover">
-                <div>
-                    <h3>Chill Beats</h3>
-                    <p>by Various Artists</p>
-                    <ul class="song-list">
-                        <li data-src="songs/song1.mp3">
-                            <span>1. Dreamscape</span>
-                            <button class="play-btn">Play</button>
-                        </li>
-                        <li data-src="songs/song2.mp3">
-                            <span>2. Evening Glow</span>
-                            <button class="play-btn">Play</button>
-                        </li>
-                        <li data-src="songs/song3.mp3">
-                            <span>3. Stardust</span>
-                            <button class="play-btn">Play</button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+    <main class="main-content">
+      <h1>Welcome to Musical Fury</h1>
+      <div id="song-list"></div>
+      <div id="add-song-form" style="display: none;">
+        <h2>Add New Song</h2>
+        <form id="song-form" enctype="multipart/form-data">
+          <input type="text" name="title" placeholder="Song Title" required>
+          <input type="text" name="artist" placeholder="Artist" required>
+          <input type="file" name="song" accept="audio/*" required>
+          <button type="submit">Add Song</button>
+        </form>
+      </div>
     </main>
+    <footer class="player-bar">
+      <div>Now Playing: <span id="current-song">None</span></div>
+      <audio id="audio-player" controls></audio>
+    </footer>
+  </div>
 
-    <!-- Music Player Controller -->
-    <div class="music-player">
-        <div class="song-details">
-            <span id="current-song">Select a song...</span>
-        </div>
-        <div class="controls">
-            <button id="play-pause">Play</button>
-            <button id="loop">Loop: Off</button>
-        </div>
-        <input type="range" id="seekbar" value="0" min="0" max="100">
-        <audio id="audio" preload="none"></audio>
-    </div>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
