@@ -1,69 +1,56 @@
-const audio = document.getElementById('audio');
-const playPauseBtn = document.getElementById('play-pause');
-const loopBtn = document.getElementById('loop');
-const seekbar = document.getElementById('seekbar');
-const currentSongSpan = document.getElementById('current-song');
+let token = null;
+let userRole = null;
 
-let currentSong = null;
-let isPlaying = false;
-let isLooping = false;
-
-// Load and play song
-document.querySelectorAll('.play-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const li = btn.closest('li');
-        const songSrc = li.getAttribute('data-src');
-        const songTitle = li.querySelector('span').innerText;
-        if (audio.src !== location.origin + '/' + songSrc && audio.src !== songSrc) {
-            audio.src = songSrc;
-        }
-        currentSongSpan.textContent = songTitle;
-        audio.play();
-        isPlaying = true;
-        playPauseBtn.textContent = "Pause";
-        currentSong = songSrc;
-    });
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+  const data = await res.json();
+  if (res.ok) {
+    token = data.token;
+    userRole = data.role;
+    document.getElementById('login-modal').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    if (userRole === 'admin') document.getElementById('admin-panel').style.display = 'block';
+    loadSongs();
+  } else {
+    alert('Login failed');
+  }
 });
 
-// Play/Pause toggle
-playPauseBtn.addEventListener('click', function() {
-    if (!audio.src) return;
-    if (isPlaying) {
-        audio.pause();
-        playPauseBtn.textContent = "Play";
-        isPlaying = false;
-    } else {
-        audio.play();
-        playPauseBtn.textContent = "Pause";
-        isPlaying = true;
-    }
+async function loadSongs() {
+  const res = await fetch('/songs');
+  const songs = await res.json();
+  const list = document.getElementById('song-list');
+  list.innerHTML = songs.map(song => `<div class="song-item" onclick="playSong('${song.file}', '${song.title}')">${song.title} by ${song.artist}</div>`).join('');
+}
+
+function playSong(file, title) {
+  document.getElementById('audio-player').src = `/uploads/${file}`;
+  document.getElementById('current-song').textContent = title;
+}
+
+document.getElementById('admin-panel').addEventListener('click', () => {
+  document.getElementById('add-song-form').style.display = 'block';
 });
 
-// Loop toggle
-loopBtn.addEventListener('click', function() {
-    isLooping = !isLooping;
-    audio.loop = isLooping;
-    loopBtn.textContent = `Loop: ${isLooping ? "On" : "Off"}`;
-});
-
-// Update seekbar as song plays
-audio.addEventListener('timeupdate', function() {
-    if (audio.duration) {
-        seekbar.value = (audio.currentTime / audio.duration) * 100;
-    }
-});
-
-// Seek functionality
-seekbar.addEventListener('input', function() {
-    if (audio.duration) {
-        audio.currentTime = (seekbar.value / 100) * audio.duration;
-    }
-});
-
-// When song ends, reset play button if not looping
-audio.addEventListener('ended', function() {
-    if (!audio.loop) {
-        playPauseBtn.textContent = "Play";
-        isPlaying = false;
-    }
+document.getElementById('song-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const res = await fetch('/songs', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}` },
+    body: formData
+  });
+  if (res.ok) {
+    loadSongs();
+    document.getElementById('add-song-form').style.display = 'none';
+  } else {
+    alert('Failed to add song');
+  }
 });
