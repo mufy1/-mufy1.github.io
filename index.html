@@ -1,49 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Musical Fury</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musical Fury</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #6B7B8C; /* Dusty blue */
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #00FFFF; /* Cyan */
+            padding: 10px;
+            text-align: center;
+        }
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background-color: #4A5A6A; /* Darker dusty blue */
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 20px;
+        }
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        .song-list {
+            list-style: none;
+            padding: 0;
+        }
+        .song-item {
+            padding: 10px;
+            border-bottom: 1px solid #00FFFF;
+            cursor: pointer;
+        }
+        .song-item:hover {
+            background-color: #00FFFF;
+            color: #6B7B8C;
+        }
+        .controls {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #4A5A6A;
+            padding: 10px;
+            text-align: center;
+        }
+        button {
+            background-color: #00FFFF;
+            color: #6B7B8C;
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        #search {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div id="login-modal" class="modal">
-    <form id="login-form">
-      <h2>Login to Musical Fury</h2>
-      <input type="text" id="username" placeholder="Username" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <button type="submit">Login</button>
-    </form>
-  </div>
+    <header>
+        <h1>Musical Fury</h1>
+    </header>
+    <div class="sidebar">
+        <h2>Playlists</h2>
+        <ul>
+            <li>Favorites</li>
+            <li>Recently Played</li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <input type="text" id="search" placeholder="Search songs...">
+        <ul class="song-list" id="songList">
+            <!-- Songs will be loaded here -->
+        </ul>
+    </div>
+    <div class="controls">
+        <button id="prevBtn">Prev</button>
+        <button id="playPauseBtn">Play</button>
+        <button id="nextBtn">Next</button>
+        <div id="currentSong">No song playing</div>
+    </div>
 
-  <div id="app" style="display: none;">
-    <nav class="sidebar">
-      <div class="logo">Musical Fury</div>
-      <ul>
-        <li>Home</li>
-        <li>Search</li>
-        <li>Your Library</li>
-        <li id="admin-panel" style="display: none;">Admin: Add Song</li>
-      </ul>
-    </nav>
-    <main class="main-content">
-      <h1>Welcome to Musical Fury</h1>
-      <div id="song-list"></div>
-      <div id="add-song-form" style="display: none;">
-        <h2>Add New Song</h2>
-        <form id="song-form" enctype="multipart/form-data">
-          <input type="text" name="title" placeholder="Song Title" required>
-          <input type="text" name="artist" placeholder="Artist" required>
-          <input type="file" name="song" accept="audio/*" required>
-          <button type="submit">Add Song</button>
-        </form>
-      </div>
-    </main>
-    <footer class="player-bar">
-      <div>Now Playing: <span id="current-song">None</span></div>
-      <audio id="audio-player" controls></audio>
-    </footer>
-  </div>
+    <script>
+        let songs = JSON.parse(localStorage.getItem('songs')) || [
+            { title: 'Song 1', artist: 'Artist 1' },
+            { title: 'Song 2', artist: 'Artist 2' }
+        ];
+        let currentIndex = 0;
+        let isPlaying = false;
 
-  <script src="script.js"></script>
+        function renderSongs() {
+            const songList = document.getElementById('songList');
+            songList.innerHTML = '';
+            songs.forEach((song, index) => {
+                const li = document.createElement('li');
+                li.className = 'song-item';
+                li.textContent = `${song.title} - ${song.artist}`;
+                li.onclick = () => playSong(index);
+                songList.appendChild(li);
+            });
+        }
+
+        function playSong(index) {
+            currentIndex = index;
+            document.getElementById('currentSong').textContent = `${songs[index].title} - ${songs[index].artist}`;
+            isPlaying = true;
+            document.getElementById('playPauseBtn').textContent = 'Pause';
+            // Dummy: In real app, integrate audio API
+            console.log('Playing:', songs[index].title);
+        }
+
+        document.getElementById('playPauseBtn').onclick = () => {
+            isPlaying = !isPlaying;
+            document.getElementById('playPauseBtn').textContent = isPlaying ? 'Pause' : 'Play';
+        };
+
+        document.getElementById('nextBtn').onclick = () => {
+            currentIndex = (currentIndex + 1) % songs.length;
+            playSong(currentIndex);
+        };
+
+        document.getElementById('prevBtn').onclick = () => {
+            currentIndex = (currentIndex - 1 + songs.length) % songs.length;
+            playSong(currentIndex);
+        };
+
+        document.getElementById('search').oninput = (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = songs.filter(song => song.title.toLowerCase().includes(query) || song.artist.toLowerCase().includes(query));
+            const songList = document.getElementById('songList');
+            songList.innerHTML = '';
+            filtered.forEach((song, index) => {
+                const li = document.createElement('li');
+                li.className = 'song-item';
+                li.textContent = `${song.title} - ${song.artist}`;
+                li.onclick = () => playSong(songs.indexOf(song));
+                songList.appendChild(li);
+            });
+        };
+
+        renderSongs();
+    </script>
 </body>
 </html>
