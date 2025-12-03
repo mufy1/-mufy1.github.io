@@ -1,56 +1,51 @@
-let token = null;
-let userRole = null;
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const res = await fetch('/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
-  const data = await res.json();
-  if (res.ok) {
-    token = data.token;
-    userRole = data.role;
-    document.getElementById('login-modal').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    if (userRole === 'admin') document.getElementById('admin-panel').style.display = 'block';
-    loadSongs();
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const songsFile = path.join(__dirname, 'songs.json');
+
+// Load songs from file
+const loadSongs = () => {
+  if (fs.existsSync(songsFile)) {
+    return JSON.parse(fs.readFileSync(songsFile));
+  }
+  return [
+    { id: 1, title: 'Song 1', artist: 'Artist 1', url: 'path/to/song1.mp3' },
+    { id: 2, title: 'Song 2', artist: 'Artist 2', url: 'path/to/song2.mp3' }
+  ];
+};
+
+// Save songs to file
+const saveSongs = (songs) => {
+  fs.writeFileSync(songsFile, JSON.stringify(songs, null, 2));
+};
+
+// Routes
+app.get('/songs', (req, res) => {
+  res.json(loadSongs());
+});
+
+app.post('/songs', (req, res) => {
+  const songs = loadSongs();
+  const newSong = { id: Date.now(), ...req.body };
+  songs.push(newSong);
+  saveSongs(songs);
+  res.json(newSong);
+});
+
+// Admin auth (simple)
+app.post('/admin/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === 'admin' && password === 'password') {
+    res.json({ success: true });
   } else {
-    alert('Login failed');
+    res.status(401).json({ success: false });
   }
 });
 
-async function loadSongs() {
-  const res = await fetch('/songs');
-  const songs = await res.json();
-  const list = document.getElementById('song-list');
-  list.innerHTML = songs.map(song => `<div class="song-item" onclick="playSong('${song.file}', '${song.title}')">${song.title} by ${song.artist}</div>`).join('');
-}
-
-function playSong(file, title) {
-  document.getElementById('audio-player').src = `/uploads/${file}`;
-  document.getElementById('current-song').textContent = title;
-}
-
-document.getElementById('admin-panel').addEventListener('click', () => {
-  document.getElementById('add-song-form').style.display = 'block';
-});
-
-document.getElementById('song-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const res = await fetch('/songs', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${token}` },
-    body: formData
-  });
-  if (res.ok) {
-    loadSongs();
-    document.getElementById('add-song-form').style.display = 'none';
-  } else {
-    alert('Failed to add song');
-  }
-});
+app.listen(3001, () => console.log('Server running on port 3001'));
