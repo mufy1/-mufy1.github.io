@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Haii Aul</title>
+
+<style>
+body{
+    margin:0;
+    font-family: "Comic Sans MS", cursive;
+    background: linear-gradient(135deg,#ffd6e7,#ffeef5);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    text-align:center;
+    background:white;
+    padding:40px;
+    border-radius:20px;
+}
+
+button{
+    padding:12px 20px;
+    margin:10px;
+    border:none;
+    border-radius:10px;
+    background:#ff4d88;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+#message{
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Hi Aul 💕</h1>
+
+<p>boleh gk aku chat cwek lain? 😳</p>
+
+<button onclick="love()">BOLEH</button>
+<button onclick="runAway()" id="noBtn">GA!</button>
+
+<p id="message"></p>
+</div>
+
+<!-- SONG -->
+<audio id="loveSong">
+<source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+function love(){
+    document.getElementById("message").innerText =
+    "Hahah bercanda,nggak kok kan kmu cwekku, LOVE YOU ❤️";
+
+    document.getElementById("loveSong").play();
+}
+
+function runAway(){
+    let btn = document.getElementById("noBtn");
+    btn.style.position="absolute";
+    btn.style.left=Math.random()*window.innerWidth+"px";
+    btn.style.top=Math.random()*window.innerHeight+"px";
+}
+
+</script>
+
+</body>
+</html>
